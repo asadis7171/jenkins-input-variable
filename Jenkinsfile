@@ -28,10 +28,24 @@ pipeline {
                     // Validate user input
                     if (terraformAction == 'apply') {
                         echo 'Executing Terraform apply...'
-                        sh 'terraform apply -auto-approve'
+                        withCredentials([[
+                            $class: 'AmazonWebServicesCredentialsBinding',
+                            credentialsId: 'aws_asad',
+                            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                        ]]) {
+                            sh 'terraform apply -auto-approve'
+                        }
                     } else if (terraformAction == 'destroy') {
                         echo 'Executing Terraform destroy...'
-                        sh 'terraform destroy -auto-approve'
+                        withCredentials([[
+                            $class: 'AmazonWebServicesCredentialsBinding',
+                            credentialsId: 'aws_asad',
+                            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                        ]]) {
+                            sh 'terraform destroy -auto-approve'
+                        }
                     } else {
                         error "Invalid Terraform action selected: ${terraformAction}"
                     }
