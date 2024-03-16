@@ -10,6 +10,15 @@ pipeline {
     }
 
     stages {
+        stage('Terraform Initialization') {
+            steps {
+                script {
+                    echo 'Initializing Terraform...'
+                    sh 'terraform init'
+                }
+            }
+        }
+
         stage('Terraform Execution') {
             steps {
                 script {
@@ -31,3 +40,4 @@ pipeline {
         }
     }
 }
+
