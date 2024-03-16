@@ -1,10 +1,18 @@
 pipeline {
     agent any
 
+    parameters {
+        choice(
+            name: 'TerraformAction',
+            choices: ['apply', 'destroy'],
+            description: 'Select Terraform action to execute: apply or destroy'
+        )
+    }
+
     environment {
         AWS_ACCESS_KEY_ID = ''
         AWS_SECRET_ACCESS_KEY = ''
-        AWS_DEFAULT_REGION = 'us-east-1'
+        AWS_DEFAULT_REGION = 'your-aws-region' // Add this line
     }
 
     stages {
@@ -13,7 +21,7 @@ pipeline {
                 script {
                     withCredentials([[
                         $class: 'AmazonWebServicesCredentialsBinding',
-                        credentialsId: 'aws_asad',
+                        credentialsId: 'aws-access-key-id',
                         accessKeyVariable: 'AWS_ACCESS_KEY_ID',
                         secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
                     ]]) {
