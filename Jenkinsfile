@@ -9,6 +9,11 @@ pipeline {
         )
     }
 
+    environment {
+        AWS_ACCESS_KEY_ID     = credentials('aws-access-key-id')
+        AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key')
+    }
+
     stages {
         stage('Terraform Initialization') {
             steps {
@@ -28,24 +33,10 @@ pipeline {
                     // Validate user input
                     if (terraformAction == 'apply') {
                         echo 'Executing Terraform apply...'
-                        withCredentials([[
-                            $class: 'AmazonWebServicesCredentialsBinding',
-                            credentialsId: 'aws_asad',
-                            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-                        ]]) {
-                            sh 'terraform apply -auto-approve'
-                        }
+                        sh 'terraform apply -auto-approve'
                     } else if (terraformAction == 'destroy') {
                         echo 'Executing Terraform destroy...'
-                        withCredentials([[
-                            $class: 'AmazonWebServicesCredentialsBinding',
-                            credentialsId: 'aws_asad',
-                            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-                        ]]) {
-                            sh 'terraform destroy -auto-approve'
-                        }
+                        sh 'terraform destroy -auto-approve'
                     } else {
                         error "Invalid Terraform action selected: ${terraformAction}"
                     }
