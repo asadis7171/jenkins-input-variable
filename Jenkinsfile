@@ -9,11 +9,6 @@ pipeline {
         )
     }
 
-    environment {
-        AWS_ACCESS_KEY_ID     = credentials('aws-access-key-id')
-        AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key')
-    }
-
     stages {
         stage('Terraform Initialization') {
             steps {
@@ -33,15 +28,26 @@ pipeline {
                     // Validate user input
                     if (terraformAction == 'apply') {
                         echo 'Executing Terraform apply...'
-                        sh 'terraform apply -auto-approve'
+                        withAWS(credentials: 'aws_asad', region: 'us-west-2') {
+                            sh 'terraform apply -auto-approve'
+                        }
                     } else if (terraformAction == 'destroy') {
                         echo 'Executing Terraform destroy...'
-                        sh 'terraform destroy -auto-approve'
+                        withAWS(credentials: 'aws_asad', region: 'us-west-2') {
+                            sh 'terraform destroy -auto-approve'
+                        }
                     } else {
                         error "Invalid Terraform action selected: ${terraformAction}"
                     }
                 }
             }
+        }
+    }
+
+    post {
+        always {
+            echo 'Cleaning up...'
+            deleteDir()
         }
     }
 }
