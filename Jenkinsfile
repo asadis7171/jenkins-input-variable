@@ -49,7 +49,7 @@ pipeline {
                     )
 
                     // Get user input and assign it to terraformAction variable
-                    def terraformAction = userInput.TerraformAction
+                    def terraformAction = userInput.TerraformAction?:''
 
                     // Validate user input
                     if (terraformAction == 'apply' || terraformAction == 'destroy') {
