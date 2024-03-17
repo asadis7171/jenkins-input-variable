@@ -48,6 +48,8 @@ pipeline {
                         )]
                     )
 
+                    echo "User input: ${userInput}" // Print out the userInput variable for debugging
+
                     // Get user input and assign it to terraformAction variable
                     def terraformAction = userInput.TerraformAction?:''
 
