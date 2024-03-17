@@ -8,6 +8,21 @@ pipeline {
     }
 
     stages {
+        stage('Set Environment Variables') {
+            steps {
+                script {
+                    withCredentials([[
+                        $class: 'AmazonWebServicesCredentialsBinding',
+                        credentialsId: 'aws_asad',
+                        accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                    ]]) {
+                        // Credentials will be automatically injected into environment variables
+                    }
+                }
+            }
+        }
+
         stage('Terraform Execution') {
             steps {
                 script {
@@ -49,10 +64,8 @@ pipeline {
 
     post {
         always {
-            node {
-                deleteDir()
-            }
+            echo 'Cleaning up...'
+            deleteDir()
         }
     }
 }
-
