@@ -54,11 +54,11 @@ pipeline {
                     //def terraformAction = userInput.TerraAction?:''
 
                     // Validate user input
-                    if "$(userInput)" == 'apply' || "$(userInput)" == 'destroy') {
-                        echo "Executing Terraform $terraformAction..."
-                        sh "terraform $userInput -auto-approve"
+                    if ("${userInput}" == 'apply' || "${userInput}" == 'destroy') {
+                        echo "Executing Terraform ${userInput}..."
+                        sh "terraform ${userInput} -auto-approve"
                     } else {
-                        error "Invalid Terraform action selected: ${terraformAction}"
+                        error "Invalid Terraform action selected: ${userInput}"
                     }
                 }
             }
