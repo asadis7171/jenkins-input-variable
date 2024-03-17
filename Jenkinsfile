@@ -42,7 +42,7 @@ pipeline {
                         message: 'Select Terraform action to execute: apply or destroy',
                         ok: 'Continue',
                         parameters: [choice(
-                            name: 'TerraformAction',
+                            name: 'TerraAction',
                             choices: ['apply', 'destroy'],
                             description: 'Select Terraform action to execute'
                         )]
@@ -51,7 +51,7 @@ pipeline {
                     echo "User input: ${userInput}" // Print out the userInput variable for debugging
 
                     // Get user input and assign it to terraformAction variable
-                    def terraformAction = userInput.TerraformAction?:''
+                    def terraformAction = userInput.TerraAction?:''
 
                     // Validate user input
                     if (terraformAction == 'apply' || terraformAction == 'destroy') {
